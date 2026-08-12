@@ -1,4 +1,4 @@
-# ✨ Warren Bill: Portfolio V2
+# Warren Bill: Portfolio V2
 
 A minimalist, typography-driven personal portfolio built with **React**, **TypeScript**, and **Vite**. Features a custom cursor, animated hero text, a canvas-based blob background, and a scroll-reveal project showcase.
 
@@ -11,18 +11,18 @@ A minimalist, typography-driven personal portfolio built with **React**, **TypeS
 
 ---
 
-## 📖 About the Project
+## About the Project
 
 This is the second iteration of my personal portfolio, redesigned with a cleaner, editorial-style aesthetic. It includes:
 
-- **Custom Cursor** — a dot-and-ring cursor that follows the mouse with smooth easing and reacts to hoverable elements
-- **Animated Hero** — cycling role/status words (`BUILDING.`, `CRAFTING.`, `SHIPPING.`, etc.) with a live clock and an interactive canvas "blob" background
-- **Scroll Reveal** — sections and elements animate into view on scroll via a custom `useReveal` hook
-- **Project Showcase** — a grid of project cards with tech stack tags and status badges (live / work-in-progress)
-- **Contact Section** — quick links to email, GitHub, LinkedIn, and resume
-- **Live Footer Clock** — real-time clock in the footer alongside role and copyright info
+- **Custom Cursor**: a dot-and-ring cursor that follows the mouse with smooth easing and reacts to hoverable elements
+- **Animated Hero**: cycling role/status words (`BUILDING.`, `CRAFTING.`, `SHIPPING.`, etc.) with a live clock and an interactive canvas "blob" background
+- **Scroll Reveal**: sections and elements animate into view on scroll via a custom `useReveal` hook
+- **Project Showcase**: a grid of project cards with tech stack tags and status badges (live / work-in-progress)
+- **Contact Section**: quick links to email, GitHub, LinkedIn, and resume
+- **Live Footer Clock**: real-time clock in the footer alongside role and copyright info
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category | Technology |
 |---|---|
@@ -31,7 +31,7 @@ This is the second iteration of my personal portfolio, redesigned with a cleaner
 | Fonts | Playfair Display, Space Grotesk, DM Mono (via Fontsource) |
 | Tooling | ESLint, typescript-eslint |
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 Portofolio-V2-main/
@@ -58,7 +58,7 @@ Portofolio-V2-main/
 └── vite.config.ts
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 1. **Clone the repository**
    ```bash
@@ -87,7 +87,7 @@ Portofolio-V2-main/
    npm run preview
    ```
 
-## 📜 Available Scripts
+## Available Scripts
 
 | Command | Description |
 |---|---|
@@ -96,10 +96,10 @@ Portofolio-V2-main/
 | `npm run lint` | Runs ESLint |
 | `npm run preview` | Previews the production build locally |
 
-## 📝 Notes
+## Notes
 
 The project cards in `src/data/projects.ts` and the contact links in `src/components/Contact.tsx` currently use placeholder content (e.g. `#` links, a placeholder email). Update these with real project links, your email, GitHub, LinkedIn, and resume before deploying.
 
-## 📄 License
+## License
 
 This project was built for personal use. Feel free to use it as a reference, but please don't copy it identically for your own portfolio.
