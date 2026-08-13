@@ -72,13 +72,13 @@ export default function Hero() {
       id="hero"
       className="relative h-screen flex flex-col justify-center items-center overflow-hidden"
     >
-      {/* Canvas — no z-index so it paints first */}
+      {/* Canvas - no z-index so it paints first */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 
       {/* Flex column: eyebrow - title(blend) - sub → tags - btns */}
       <div className="relative flex flex-col items-center text-center pointer-events-none w-full">
 
-        {/* Eyebrow — no blend */}
+        {/* Eyebrow - no blend */}
         <div className="anim-fade flex items-center justify-center gap-3 mb-4"
              style={{ fontSize:'11px', letterSpacing:'.28em', textTransform:'uppercase', color:'var(--muted)' }}>
           <span className="w-6 h-px" style={{ background:'var(--accent)', opacity:.6 }} />
@@ -86,7 +86,7 @@ export default function Hero() {
           <span className="w-6 h-px" style={{ background:'var(--accent)', opacity:.6 }} />
         </div>
 
-        {/* Title — only this wrapper gets difference blend */}
+        {/* Title - only this wrapper gets difference blend */}
         <div className="title-blend w-full">
           <h1 style={{ fontFamily:'"Playfair Display",serif', fontWeight:700, letterSpacing:'-.02em', color:'#fff' }}>
             <span className="anim-slide block"
@@ -106,7 +106,7 @@ export default function Hero() {
           </h1>
         </div>
 
-        {/* Sub — no blend */}
+        {/* Sub - no blend */}
         <p className="anim-fade-2 mt-5"
            style={{ fontSize:'12px', letterSpacing:'.18em', textTransform:'uppercase', color:'var(--muted)' }}>
           Computer Science Student &nbsp;·&nbsp; Jakarta, ID

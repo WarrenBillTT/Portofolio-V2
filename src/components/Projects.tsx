@@ -1,15 +1,30 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ProjectCard from './ProjectCard'
 import { PROJECTS } from '../data/projects'
+
+const CSTEP = 320
+
+function copiesNeeded(viewportWidth: number, setWidth: number) {
+  const home = Math.ceil(viewportWidth / setWidth) + 2
+  return home * 2 + 1 // odd, so there's a clean centered "home" copy
+}
 
 export default function Projects() {
   const trackRef  = useRef<HTMLDivElement>(null)
   const wrapRef   = useRef<HTMLDivElement>(null)
   const stateRef  = useRef({ off: 0, tOff: 0, drag: false, dX: 0, dOff: 0 })
 
-  const CSTEP = 320
-  const SET   = PROJECTS.length * CSTEP
-  const ALL   = [...PROJECTS, ...PROJECTS, ...PROJECTS]
+  const setWidth = PROJECTS.length * CSTEP
+
+  const [copies, setCopies] = useState(() => copiesNeeded(typeof window !== 'undefined' ? window.innerWidth : 1600, PROJECTS.length * CSTEP))
+  const home = Math.floor(copies / 2)
+  const ALL  = Array.from({ length: copies }, () => PROJECTS).flat()
+
+  useEffect(() => {
+    const onResize = () => setCopies(copiesNeeded(window.innerWidth, setWidth))
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [setWidth])
 
   useEffect(() => {
     const track = trackRef.current
@@ -22,16 +37,27 @@ export default function Projects() {
     track.style.paddingRight = `${pad}px`
 
     const s = stateRef.current
-    s.off  = -SET
-    s.tOff = -SET
+    const base = -home * setWidth
+    s.off  = base
+    s.tOff = base
+
+    // Map any (unbounded) physical offset onto the band centered on the home
+    // copy, purely for rendering. off/tOff/dOff themselves are never reset -
+    // that's what keeps the drag anchor from desyncing mid-wrap. With enough
+    // copies (see copiesNeeded), that band always has real rendered cards on
+    // both sides, however wide the viewport is.
+    const wrapped = (v: number) => {
+      let diff = (v - base) % setWidth
+      if (diff < -setWidth / 2) diff += setWidth
+      if (diff >= setWidth / 2) diff -= setWidth
+      return base + diff
+    }
 
     let raf: number
     const animate = () => {
       if (!s.drag) s.tOff -= 0.5
       s.off += (s.tOff - s.off) * 0.09
-      if (s.off > -SET * 0.5) { s.off -= SET; s.tOff -= SET }
-      if (s.off < -SET * 1.5) { s.off += SET; s.tOff += SET }
-      track.style.transform = `translateX(${s.off}px)`
+      track.style.transform = `translateX(${wrapped(s.off)}px)`
       raf = requestAnimationFrame(animate)
     }
     raf = requestAnimationFrame(animate)
@@ -66,7 +92,7 @@ export default function Projects() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup', onUp)
     }
-  }, [SET, CSTEP])
+  }, [copies, home, setWidth])
 
   return (
     <section id="projects" className="overflow-hidden py-20" style={{ background:'#0a0a0a' }}>
@@ -82,13 +108,15 @@ export default function Projects() {
         </div>
         <p className="text-[12px] font-light text-right max-w-[240px] leading-[1.75]"
            style={{ color:'var(--muted)' }}>
-          Drag to explore — loops continuously.
+          Drag to explore - loops continuously.
         </p>
       </div>
 
       <div ref={wrapRef} className="overflow-hidden py-5 pb-10" style={{ cursor:'grab', userSelect:'none' }}>
         <div ref={trackRef} className="cards-track">
-          {ALL.map((p, i) => <ProjectCard key={`${p.name}-${i}`} project={p} />)}
+          {ALL.map((p, i) => (
+            <ProjectCard key={`${p.name}-${i}`} project={p} index={i % PROJECTS.length} total={PROJECTS.length} />
+          ))}
         </div>
       </div>
 

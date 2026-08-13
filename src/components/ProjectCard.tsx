@@ -1,64 +1,57 @@
 import type { Project } from '../data/projects'
 
-interface Props { project: Project }
+interface Props { project: Project; index: number; total: number }
 
-export default function ProjectCard({ project }: Props) {
+export default function ProjectCard({ project, index, total }: Props) {
   return (
-    <div className="flex-none w-[300px] rounded-[6px] overflow-hidden relative group"
-         style={{ background:'#0f0f0f', border:'1px solid var(--border)',
-                  transition:'transform .4s cubic-bezier(.34,1.56,.64,1),border-color .3s,box-shadow .3s' }}
-         onMouseEnter={e => {
-           const el = e.currentTarget as HTMLDivElement
-           el.style.transform = 'translateY(-8px)'
-           el.style.borderColor = 'rgba(200,245,58,.25)'
-           el.style.boxShadow = '0 20px 40px rgba(0,0,0,.5)'
-         }}
-         onMouseLeave={e => {
-           const el = e.currentTarget as HTMLDivElement
-           el.style.transform = ''
-           el.style.borderColor = ''
-           el.style.boxShadow = ''
-         }}>
+    <div className="flex-none w-[300px] relative group cursor-default">
 
-      {/* Thumbnail */}
-      <div className="w-full h-[168px] overflow-hidden"
-           style={{ background:'#0d0d0d' }}>
-        <div className="w-full h-full flex flex-col items-center justify-center gap-1.5">
-          <div className="text-[28px] opacity-35">{project.icon}</div>
-          <div className="text-[10px] tracking-[.15em] uppercase" style={{ color:'var(--muted)', fontFamily:'DM Mono,monospace' }}>
-            {project.name}
-          </div>
-        </div>
+      {/* Thumbnail - hard edges, desaturated until hover */}
+      <div className="relative w-full h-[190px] overflow-hidden" style={{ background:'#0d0d0d' }}>
+        <img src={project.image} alt={`${project.name} screenshot`}
+             className="w-full h-full object-cover object-top grayscale-[0.65] contrast-[1.05] transition-all duration-700 ease-out group-hover:grayscale-0 group-hover:scale-[1.045]" />
+        <div className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-0"
+             style={{ background:'linear-gradient(180deg,rgba(5,5,5,0) 55%,rgba(5,5,5,.55) 100%)' }} />
+
+        {/* Index */}
+        <span className="absolute top-3 left-3 text-[10px] tracking-[.15em]"
+              style={{ color:'rgba(248,245,240,.65)', fontFamily:'DM Mono,monospace' }}>
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        {/* Status */}
+        <span className="absolute top-3 right-3 flex items-center gap-1.5 text-[9px] tracking-[.15em] uppercase"
+              style={{ color: project.status === 'live' ? 'var(--accent)' : 'rgba(248,245,240,.6)', fontFamily:'DM Mono,monospace' }}>
+          <span className="w-[5px] h-[5px]" style={{ background: project.status === 'live' ? 'var(--accent)' : 'rgba(248,245,240,.5)' }} />
+          {project.status === 'live' ? 'Live' : 'WIP'}
+        </span>
+
+        {/* Growing hairline on hover */}
+        <span className="absolute bottom-0 left-0 h-[2px] w-0 transition-[width] duration-500 ease-out group-hover:w-full"
+              style={{ background:'var(--accent)' }} />
       </div>
 
-      {/* Badge */}
-      <span className="absolute top-2.5 right-2.5 text-[9px] tracking-[.1em] uppercase px-2 py-0.5 rounded-[3px]"
-            style={project.status === 'live'
-              ? { background:'rgba(200,245,58,.1)', border:'1px solid rgba(200,245,58,.25)', color:'var(--accent)', fontFamily:'DM Mono,monospace' }
-              : { background:'rgba(248,245,240,.05)', border:'1px solid var(--border)', color:'var(--muted)', fontFamily:'DM Mono,monospace' }}>
-        {project.status === 'live' ? '● Live' : '◐ WIP'}
-      </span>
-
-      {/* Body */}
-      <div className="p-5">
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {project.stack.map(s => (
-            <span key={s} className="text-[10px] px-2 py-0.5 rounded-[3px]"
-                  style={{ background:'rgba(200,245,58,.06)', border:'1px solid rgba(200,245,58,.14)',
-                           color:'rgba(200,245,58,.65)', fontFamily:'DM Mono,monospace' }}>
-              {s}
-            </span>
-          ))}
+      {/* Body - no card box, just a hairline rule under the image */}
+      <div className="pt-4" style={{ borderTop:'1px solid var(--border)' }}>
+        <div className="flex items-start justify-between gap-3 mb-1.5">
+          <div className="text-[16px] font-bold tracking-[-0.01em]"
+               style={{ fontFamily:'"Playfair Display",serif', color:'var(--white)' }}>
+            {project.name}
+          </div>
+          <span className="text-[10px] tracking-[.1em] uppercase mt-1 transition-colors"
+                style={{ color:'var(--muted)', fontFamily:'DM Mono,monospace' }}>
+            {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
         </div>
-        <div className="text-[15px] font-bold mb-1.5 tracking-[-0.01em]"
-             style={{ fontFamily:'"Playfair Display",serif', color:'var(--white)' }}>
-          {project.name}
-        </div>
-        <div className="text-[12.5px] leading-[1.65] font-light" style={{ color:'var(--muted)' }}>
+        <div className="text-[12px] leading-[1.65] font-light mb-3" style={{ color:'var(--muted)' }}>
           {project.desc}
         </div>
-        <div className="flex gap-3 mt-3.5 pt-3.5" style={{ borderTop:'1px solid var(--border)' }}>
-          {[['⌥ GitHub ↗', project.github], ['Live Demo ↗', project.demo]].map(([label, href]) => (
+        <div className="text-[10px] tracking-[.06em] mb-3.5 uppercase"
+             style={{ color:'rgba(200,245,58,.55)', fontFamily:'DM Mono,monospace' }}>
+          {project.stack.join('  /  ')}
+        </div>
+        <div className="flex gap-4">
+          {[['GitHub ↗', project.github], ['Live Demo ↗', project.demo]].map(([label, href]) => (
             <a key={label} href={href}
                className="text-[11px] tracking-[.04em] no-underline transition-colors"
                style={{ color:'var(--muted)', fontFamily:'DM Mono,monospace' }}
